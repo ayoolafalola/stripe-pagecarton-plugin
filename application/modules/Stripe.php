@@ -15,7 +15,7 @@
  * @see Stripe
  */
  
-require_once 'Application/User/Abstract.php';
+require_once 'Application/User/Abstract.php'; 
 
 
 /**
