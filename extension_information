@@ -1,0 +1,24 @@
+{
+    "extension_title": "Stripe Payments",
+    "modules": [
+        "\/Stripe.php",
+        "\/Stripe\/InlineEmbed.php",
+        "\/Stripe\/Settings.php"
+    ],
+    "settings_class": "Stripe_Settings",
+    "databases": [
+        "\/Application\/Subscription\/Checkout\/checkoutoption.xml"
+    ],
+    "documents": [
+        "\/stripe-secure.png"
+    ],
+    "extension_name": "stripe_payments",
+    "files": [
+        "\/modules\/Stripe.php",
+        "\/modules\/Stripe\/InlineEmbed.php",
+        "\/modules\/Stripe\/Settings.php",
+        "\/databases\/Application\/Subscription\/Checkout\/checkoutoption.xml",
+        "\/databases\/Application\/Subscription\/Checkout\/__\/checkoutoption",
+        "\/documents\/stripe-secure.png"
+    ]
+}
