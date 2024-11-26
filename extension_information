@@ -1,5 +1,5 @@
 {
-    "extension_title": "Stripe Payments",
+    "extension_title": "Stripe",
     "modules": [
         "\/Stripe.php",
         "\/Stripe\/InlineEmbed.php",
