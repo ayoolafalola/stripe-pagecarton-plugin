@@ -19,28 +19,15 @@ class Stripe_InlineEmbed extends Stripe
             $parameters['email'] = $cart['checkout_info']['email_address'];
         }
 
-        if (empty($parameters['email'])) {
-            $form = new Ayoola_Form();
-            $form->submitValue = 'Continue to Stripe';
-            $fieldset = new Ayoola_Form_Element();
-            $fieldset->addElement(array(
-                'name' => 'email',
-                'label' => 'Billing E-mail Address',
-                'placeholder' => 'e.g. example@email.com',
-                'type' => 'InputText'
-            ));
-            $form->addFieldset($fieldset);
-
-            $this->setViewContent($form->view());
-            if (!$em = $form->getValues()) {
-                return false;
-            }
-            $parameters['email'] = $em['email'];
-        }
-
         $parameters['reference'] = $this->getParameter('reference') ?: $parameters['order_number'];
         $parameters['key'] = Stripe_Settings::retrieve('public_key');
         $parameters['currency'] = Stripe_Settings::retrieve('currency');
+        $secretKey = Stripe_Settings::retrieve('secret_key');
+        if( Stripe_Settings::retrieve('test_mode') )
+        {
+            $parameters['key'] = Stripe_Settings::retrieve('test_public_key');
+            $secretKey = Stripe_Settings::retrieve('test_secret_key');
+        }
         $parameters['price'] = 0.00;
 
         foreach ($values as $name => $value) {
@@ -53,8 +40,6 @@ class Stripe_InlineEmbed extends Stripe
         $parameters['amount'] = $parameters['price'] * 100; // Stripe uses the smallest currency unit (e.g., cents)
 
         // Generate PaymentIntent and get clientSecret
-        $secretKey = Stripe_Settings::retrieve('secret_key');
-
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => 'https://api.stripe.com/v1/payment_intents',
@@ -125,9 +110,13 @@ class Stripe_InlineEmbed extends Stripe
             return false;
         }
         $secretKey = Stripe_Settings::retrieve('secret_key');
+        if( Stripe_Settings::retrieve('test_mode') )
+        {
+            $secretKey = Stripe_Settings::retrieve('test_secret_key');
+        }
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'https://api.stripe.com/v1/payment_intents/' . $_REQUEST['ref']);
+        curl_setopt($ch, CURLOPT_URL, 'https://api.stripe.com/v1/payment_intents/' . $_REQUEST['payment_intent']);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Authorization: Bearer ' . $secretKey]);
         $request = curl_exec($ch);
@@ -136,7 +125,7 @@ class Stripe_InlineEmbed extends Stripe
         $result = $request ? json_decode($request, true) : array();
 
         $orderInfo['order_status'] = empty($result['status']) || $result['status'] !== 'succeeded' ? 0 : 99;
-        $orderInfo['order_random_code'] = $_REQUEST['ref'];
+        $orderInfo['order_random_code'] = $_REQUEST['payment_intent'];
         $orderInfo['gateway_response'] = $result;
 
         self::changeStatus($orderInfo);

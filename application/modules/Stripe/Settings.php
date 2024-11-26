@@ -58,9 +58,15 @@ class Stripe_Settings extends PageCarton_Settings
 		$fieldset = new Ayoola_Form_Element;
 
         //	auth levels
-		$fieldset->addElement( array( 'name' => 'secret_key', 'label' => 'Secret Key', 'value' => @$settings['secret_key'], 'type' => 'InputText' ) );
-		$fieldset->addElement( array( 'name' => 'public_key', 'label' => 'Public Key', 'value' => @$settings['public_key'], 'type' => 'InputText' ) );
-		$fieldset->addElement( array( 'name' => 'currency', 'label' => 'Currency Code (default is USD)', 'value' => @$settings['currency'], 'type' => 'InputText' ) );  
+		$fieldset->addElement( array( 'name' => 'secret_key', 'label' => 'Live Secret Key', 'value' => @$settings['secret_key'], 'type' => 'InputText' ) );
+		$fieldset->addElement( array( 'name' => 'public_key', 'label' => 'Live Public Key', 'value' => @$settings['public_key'], 'type' => 'InputText' ) );
+
+		$fieldset->addElement( array( 'name' => 'test_secret_key', 'label' => 'Test Secret Key', 'value' => @$settings['secret_key'], 'type' => 'InputText' ) );
+		$fieldset->addElement( array( 'name' => 'test_public_key', 'label' => 'Test Public Key', 'value' => @$settings['public_key'], 'type' => 'InputText' ) );
+
+		$fieldset->addElement( array( 'name' => 'currency', 'label' => 'Currency Code (default is USD)', 'value' => @$settings['currency'], 'type' => 'InputText' ) ); 
+
+		$fieldset->addElement( array( 'name' => 'test_mode', 'label' => 'Test Mode', 'value' => @$settings['test_mode'], 'type' => 'radio' ), array( 0 => 'No', 1 => 'Yes' ) );  
 		
 		$fieldset->addLegend( 'Stripe Settings' );        
 		$form->addFieldset( $fieldset );
